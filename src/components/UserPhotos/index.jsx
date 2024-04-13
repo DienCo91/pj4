@@ -1,47 +1,87 @@
 import React from "react";
-import { Typography } from "@mui/material";
-
+import { useParams, Link } from "react-router-dom";
 import "./styles.css";
-import { useParams } from "react-router-dom";
+
 import models from "../../modelData/models";
-import { useEffect, useState } from "react";
+
+import {
+  Typography,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemAvatar,
+  Avatar,
+  Grid,
+} from "@mui/material";
 
 /**
  * Define UserPhotos, a React component of Project 4.
  */
 function UserPhotos() {
   const { userId } = useParams();
-  const user = models.userModel(userId);
-  const [userPhotos, setUserPhotos] = useState([]);
+  const photos = models.photoOfUserModel(userId);
 
-  useEffect(() => {
-    if (user) {
-      const photos = models.photoOfUserModel(user._id);
-      setUserPhotos(photos);
-    }
-  }, [user]);
+  // Kiểm tra xem photos có được khởi tạo không
+  if (!photos || photos.length === 0) {
+    return (
+      <Typography variant="body1">No photos found for this user.</Typography>
+    );
+  }
 
   return (
-    <>
-      {user && (
-        <div>
-          {userPhotos.length > 0 && (
-            <div>
-              <Typography variant="body1">Photos:</Typography>
-              {userPhotos.map((photo) => (
-                <>
-                  <img
-                    key={photo._id}
-                    src={`/images/${photo.file_name}`}
-                    alt="User Photo"
-                  />
-                </>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
-    </>
+    <div>
+      <Typography variant="h4" gutterBottom>
+        Photos of User
+      </Typography>
+      <List>
+        {photos.map((photo) => (
+          <ListItem key={photo._id} alignItems="flex-start">
+            <ListItemAvatar>
+              <Avatar
+                alt={photo.file_name}
+                src={`/images/${photo.file_name}`}
+              />
+            </ListItemAvatar>
+            <ListItemText
+              primary={photo.date_time}
+              secondary={
+                <React.Fragment>
+                  <Typography
+                    component="span"
+                    variant="body2"
+                    color="textPrimary"
+                  >
+                    Comments:
+                  </Typography>
+                  <Grid container spacing={1}>
+                    {photo.comments && photo.comments.length > 0 ? (
+                      photo.comments.map((comment) => (
+                        <Grid item key={comment._id}>
+                          <Typography variant="body2">
+                            {comment.user.first_name} {comment.user.last_name}:{" "}
+                            {comment.comment}
+                          </Typography>
+                        </Grid>
+                      ))
+                    ) : (
+                      <Typography
+                        component="span"
+                        variant="body2"
+                        color="textPrimary"
+                        style={{ margin: 10, opacity: 0.5 }}
+                      >
+                        No Comment.
+                      </Typography>
+                    )}
+                  </Grid>
+                </React.Fragment>
+              }
+            />
+          </ListItem>
+        ))}
+      </List>
+      <Link to={`/users/${userId}`}>Back to User Detail</Link>
+    </div>
   );
 }
 export default UserPhotos;

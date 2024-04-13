@@ -11,7 +11,7 @@ function TopBar({ title }) {
     <AppBar className="topbar-appBar" position="absolute">
       <Toolbar className="toolbar">
         <Typography variant="h5" color="inherit">
-          Dang Tien Dung
+          Nguyễn Nhật Minh B21DDCN527
         </Typography>
         <Typography>{title}</Typography>
       </Toolbar>

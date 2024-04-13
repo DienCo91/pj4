@@ -1,5 +1,5 @@
 import React from "react";
-import { Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 
 import "./styles.css";
 import { Link, useParams } from "react-router-dom";
@@ -23,13 +23,19 @@ function UserDetail() {
           <Typography variant="body1">Last Name: {user.last_name}</Typography>
           <Typography variant="body1">Location: {user.location}</Typography>
           <Typography variant="body1">
-            Description: {user.description}
+            Description:{" "}
+            {user.description.replace(/\<(.+?)\>(.+?)\<(.+?)\>/, "$2")}
           </Typography>
           <Typography variant="body1">Occupation: {user.occupation}</Typography>
           <Typography variant="body1">
-            <Link to={`/photos/${user._id}`}>
-              <button>See Photos</button>
-            </Link>
+            <Button
+              component={Link}
+              to={`/photos/${userId}`}
+              variant="contained"
+              color="primary"
+            >
+              Share Photos
+            </Button>
           </Typography>
         </div>
       )}
